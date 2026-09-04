@@ -10,7 +10,7 @@ DSH creative mode plugin：给 DSH（DeepSeek Harness）的 AI 会话提供 **�
 
 > 「帮我画一张水墨风格的竹子」「生成一个像素风游戏角色图标」
 
-脚本直接调用 StepFun **Step Plan（包月套餐）** 接口（模型 `step-image-edit-2`，文生图），生成真实 PNG 图片并保存到本地。
+脚本直接调用兼容 OpenAI 的图像生成接口（默认 **StepFun Step Plan（包月套餐）**：`step_plan/v1/images/generations`，模型 `step-image-edit-2`），生成真实 PNG 图片并保存到本地。
 
 ## 环境要求
 
@@ -40,10 +40,10 @@ dsh plugin add github:<owner>/dsh-creative-plugin --profile web
 ## 独立命令行用法（不装 DSH 也能用）
 
 ```bash
-# 英文/中文提示词均可（建议写入 UTF-8 文件避免终端编码问题）
+# 默认走 StepFun Step Plan（包月）套餐端点；可通过 --base-url 换成你自己的端点/供应商
 node lib/gen.mjs --prompt "a red apple on a wooden table, photo"
 node lib/gen.mjs --prompt-file prompt.txt --out C:/path/out.png
-# 可选参数：--model 默认 step-image-edit-2；--out 指定保存路径
+# 可选参数：--model 默认 step-image-edit-2；--base-url 默认 https://api.stepfun.com/step_plan/v1；--out 指定保存路径
 ```
 
 输出：默认打印图片字节数；带 `--out` 时把图片保存为本地 PNG 文件。
@@ -63,7 +63,8 @@ dsh-creative-plugin/
 
 ## 原理
 
-- `gen.mjs` 向 `POST https://api.stepfun.com/step_plan/v1/images/generations` 发送 `{ model: "step-image-edit-2", prompt, response_format: "b64_json", text_mode: true }`（Step Plan 套餐图像端点，消耗包月额度）
+- `gen.mjs` 向任意兼容 OpenAI 的图像生成端点发送 `POST /images/generations`（默认 **StepFun Step Plan**：`https://api.stepfun.com/step_plan/v1`），可通过 `--base-url` 切换到你自己的套餐/供应商
+- 默认请求体：`{ model: "step-image-edit-2", prompt, response_format: "b64_json", text_mode: true }`，`--model` 可改模型
 - 返回 `data[0].b64_json`（base64 编码的 PNG）
 - `--out` 会把 base64 解码保存为本地 PNG 文件
 
