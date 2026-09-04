@@ -10,12 +10,12 @@ DSH creative mode plugin：给 DSH（DeepSeek Harness）的 AI 会话提供 **�
 
 > 「帮我画一张水墨风格的竹子」「生成一个像素风游戏角色图标」
 
-脚本直接调用 StepFun 官方接口（模型 `step-2x-large`，文生图），生成真实 PNG 图片。
+脚本直接调用 StepFun **Step Plan（包月套餐）** 接口（模型 `step-image-edit-2`，文生图），生成真实 PNG 图片并保存到本地。
 
 ## 环境要求
 
 - Node.js ≥ 18（内置 `fetch`）
-- 一个 **StepFun（阶跃星辰）API Key**：到 platform.stepfun.com 申请，模型名以官方 `GET /v1/models` 返回为准
+- 一个 **StepFun（阶跃星辰）API Key** 且已订阅 **Step Plan 套餐**（生图走套餐端点 `step_plan/v1`，与对话共用包月额度）
 
 > ⚠️ API Key 由使用者自备，请勿把 Key 提交到仓库或分享给他人。
 
@@ -43,10 +43,10 @@ dsh plugin add github:<owner>/dsh-creative-plugin --profile web
 # 英文/中文提示词均可（建议写入 UTF-8 文件避免终端编码问题）
 node lib/gen.mjs --prompt "a red apple on a wooden table, photo"
 node lib/gen.mjs --prompt-file prompt.txt --out C:/path/out.png
-# 可选参数：--model 默认 step-2x-large；--out 指定保存路径
+# 可选参数：--model 默认 step-image-edit-2；--out 指定保存路径
 ```
 
-输出：打印图片 URL；带 `--out` 时同时下载保存到本地。
+输出：默认打印图片字节数；带 `--out` 时把图片保存为本地 PNG 文件。
 
 ## 目录结构
 
@@ -63,9 +63,9 @@ dsh-creative-plugin/
 
 ## 原理
 
-- `gen.mjs` 向 `POST https://api.stepfun.com/v1/images/generations` 发送 `{ model: "step-2x-large", prompt }`
-- 返回 `data[0].url`（StepFun 对象存储临时链接，24h 有效）
-- `--out` 会把图片下载为本地 PNG 文件
+- `gen.mjs` 向 `POST https://api.stepfun.com/step_plan/v1/images/generations` 发送 `{ model: "step-image-edit-2", prompt, response_format: "b64_json", text_mode: true }`（Step Plan 套餐图像端点，消耗包月额度）
+- 返回 `data[0].b64_json`（base64 编码的 PNG）
+- `--out` 会把 base64 解码保存为本地 PNG 文件
 
 ## License
 
