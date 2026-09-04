@@ -4,6 +4,27 @@ DSH creative mode plugin：给 DSH（DeepSeek Harness）的 AI 会话提供 **�
 
 ![test](https://img.shields.io/badge/DSH-plugin-7B3FE4) ![node](https://img.shields.io/badge/node-%3E%3D18-green)
 
+## 快速开始
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/xiaohuo130/dsh-creative-plugin.git
+
+# 2. 进入目录
+cd dsh-creative-plugin
+
+# 3. 配置 API Key（PowerShell）
+$env:STEPFUN_API_KEY='sk-xxxx'
+
+# 4. 默认生成一张图
+node lib/gen.mjs --prompt "a red apple on a wooden table, photo"
+
+# 5. 保存到本地
+node lib/gen.mjs --prompt "a red apple on a wooden table, photo" --out C:/path/out.png
+```
+
+> 默认走 **StepFun Step Plan** 套餐端点。如果你要用自己的 OpenAI 兼容图像服务，加 `--base-url` 和 `--model` 即可，见下方【参数说明】。
+
 ## 它能做什么
 
 安装后，DSH 里的 AI 助手可以通过本插件的 `lib/gen.mjs` 生成图片并保存到本地，例如：
