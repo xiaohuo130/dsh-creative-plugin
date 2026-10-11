@@ -1,8 +1,8 @@
 {
   "name": "dsh-creative-plugin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
-  "description": "DSH creative mode plugin: bridge to external image/video generation APIs.",
+  "description": "DSH creative mode plugin: registers a creative_generate_image tool that bridges DeepSeek Harness sessions to any OpenAI-compatible text-to-image endpoint (default: StepFun step-image-edit-2).",
   "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js",
@@ -10,19 +10,35 @@
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./package.json": "./package.json"
   },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "image-generation",
+    "text-to-image",
+    "stepfun",
+    "creative"
+  ],
+  "license": "MIT",
+  "author": "xiaohuo130",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaohuo130/dsh-creative-plugin.git"
+  },
+  "homepage": "https://github.com/xiaohuo130/dsh-creative-plugin#readme",
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
     "client": {
-      "inject": [
-        "@deepseek-ai/dsh-client-runtime"
-      ],
+      "inject": [],
       "platform": "web"
     }
   },
   "files": [
     "lib",
-    "cordis.patch.yml"
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
   ]
 }
